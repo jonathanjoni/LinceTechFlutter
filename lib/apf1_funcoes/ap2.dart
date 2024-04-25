@@ -28,7 +28,7 @@ class _OpcaoAleatoriaAppState extends State<OpcaoAleatoriaApp> {
   }
 
   int sorteaBotao() {
-    final numeroAleatorio = Random().nextInt(2);
+    final numeroAleatorio = Random().nextInt(3);
     return numeroAleatorio;
   }
 
