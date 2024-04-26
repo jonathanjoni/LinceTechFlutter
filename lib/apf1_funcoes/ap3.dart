@@ -25,7 +25,10 @@ class MyApp extends StatelessWidget {
 }
 
 class GanhouWidget extends StatelessWidget {
-  const GanhouWidget({Key? key}) : super(key: key);
+  final VoidCallback botaoReiniciarJogo;
+
+  const GanhouWidget({Key? key, required this.botaoReiniciarJogo})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +40,7 @@ class GanhouWidget extends StatelessWidget {
             const Text('Você ganhou'),
             ElevatedButton(
               onPressed: () {
-                print('O jogo ira reiniciar');
+                botaoReiniciarJogo;
               },
               child: const Text('Reiniciar'),
             ),
@@ -47,7 +50,10 @@ class GanhouWidget extends StatelessWidget {
 }
 
 class PerdeuWidget extends StatelessWidget {
-  const PerdeuWidget({Key? key}) : super(key: key);
+  final VoidCallback botaoReiniciaJogo;
+
+  const PerdeuWidget({Key? key, required this.botaoReiniciaJogo})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -59,6 +65,7 @@ class PerdeuWidget extends StatelessWidget {
           const Text('Você perdeu'),
           ElevatedButton(
             onPressed: () {
+              botaoReiniciaJogo;
               print('O jogo ira reiniciar');
             },
             child: const Text('Reiniciar'),
@@ -71,7 +78,8 @@ class PerdeuWidget extends StatelessWidget {
 
 class JogandoWidget extends StatelessWidget {
   final Function(int) botaoPressionado;
-  JogandoWidget({Key? key, required this.botaoPressionado}) : super(key: key);
+  const JogandoWidget({Key? key, required this.botaoPressionado})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -141,16 +149,23 @@ class _MyWidgetState extends State<MyWidget> {
     });
   }
 
+  // Volta ao estado original as variaveis
+  void reiniciaJogo() {
+    botaoCorreto = random.nextInt(3);
+    clicks = 0;
+    situacao = SituacaoDoJogo.jogando;
+  }
+
   @override
   Widget build(BuildContext context) {
     // Se o usuário ganhou, retorna a mensagem de sucesso com o fundo em verde
     switch (situacao) {
       case SituacaoDoJogo.ganhou:
-        return const GanhouWidget();
+        return GanhouWidget(botaoReiniciarJogo: reiniciaJogo);
 
       // Se o usuário perdeu, retorna a mensagem de fracasso com o fundo em vermelho
       case SituacaoDoJogo.perdeu:
-        return const PerdeuWidget();
+        return PerdeuWidget(botaoReiniciaJogo: reiniciaJogo);
 
       // Nesse momento o jogo ainda nao foi finalizado
       case SituacaoDoJogo.jogando:
