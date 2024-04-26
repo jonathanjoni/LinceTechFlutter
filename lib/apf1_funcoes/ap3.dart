@@ -24,6 +24,8 @@ class MyApp extends StatelessWidget {
   }
 }
 
+enum SituacaoDoJogo { ganhou, perdeu, jogando }
+
 class MyWidget extends StatefulWidget {
   @override
   State<MyWidget> createState() => _MyWidgetState();
@@ -34,8 +36,7 @@ class _MyWidgetState extends State<MyWidget> {
 
   var botaoCorreto = 0;
   var clicks = 0;
-  var ganhou = false;
-  var perdeu = false;
+  var situacao = SituacaoDoJogo.jogando;
 
   // Esse método e chamado somente uma vez, ao iniciar o state
   @override
@@ -51,15 +52,15 @@ class _MyWidgetState extends State<MyWidget> {
     setState(() {
       // Verificar se a opção escolhida esta correta
       if (opcao == botaoCorreto) {
-        ganhou = true;
+        situacao = SituacaoDoJogo.ganhou;
       } else {
         // Se estiver errada, incrementa o contador de clicks
         clicks++;
       }
 
       // Se a quantidade de clicks for maior ou igual a 2, o usuário perdeu
-      if (clicks >= 2 && !ganhou) {
-        perdeu = true;
+      if (clicks >= 2 && situacao != SituacaoDoJogo.ganhou) {
+        situacao = SituacaoDoJogo.perdeu;
       }
     });
   }
@@ -67,43 +68,44 @@ class _MyWidgetState extends State<MyWidget> {
   @override
   Widget build(BuildContext context) {
     // Se o usuário ganhou, retorna a mensagem de sucesso com o fundo em verde
-    if (ganhou) {
-      return Container(
-        color: Colors.green,
-        child: const Text('Você ganhou'),
-      );
-    }
+    switch (situacao) {
+      case SituacaoDoJogo.ganhou:
+        return Container(
+          color: Colors.green,
+          child: const Text('Você ganhou'),
+        );
 
-    // Se o usuário perdeu, retorna a mensagem de fracasso com o fundo em vermelho
-    if (perdeu) {
-      return Container(
-        color: Colors.red,
-        child: const Text('Você perdeu'),
-      );
-    }
+      // Se o usuário perdeu, retorna a mensagem de fracasso com o fundo em vermelho
+      case SituacaoDoJogo.perdeu:
+        return Container(
+          color: Colors.red,
+          child: const Text('Você perdeu'),
+        );
 
-    // Nesse momento o jogo ainda nao foi finalizado
-    return Column(
-      children: [
-        ElevatedButton(
-          child: const Text('A'),
-          onPressed: () {
-            tentativa(0);
-          },
-        ),
-        ElevatedButton(
-          child: const Text('B'),
-          onPressed: () {
-            tentativa(1);
-          },
-        ),
-        ElevatedButton(
-          child: const Text('C'),
-          onPressed: () {
-            tentativa(2);
-          },
-        ),
-      ],
-    );
+      // Nesse momento o jogo ainda nao foi finalizado
+      case SituacaoDoJogo.jogando:
+        return Column(
+          children: [
+            ElevatedButton(
+              child: const Text('A'),
+              onPressed: () {
+                tentativa(0);
+              },
+            ),
+            ElevatedButton(
+              child: const Text('B'),
+              onPressed: () {
+                tentativa(1);
+              },
+            ),
+            ElevatedButton(
+              child: const Text('C'),
+              onPressed: () {
+                tentativa(2);
+              },
+            ),
+          ],
+        );
+    }
   }
 }
