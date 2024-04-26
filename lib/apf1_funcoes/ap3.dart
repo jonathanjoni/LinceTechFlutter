@@ -53,7 +53,18 @@ class PerdeuWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       color: Colors.red,
-      child: const Text('Você perdeu'),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const Text('Você perdeu'),
+          ElevatedButton(
+            onPressed: () {
+              print('O jogo ira reiniciar');
+            },
+            child: const Text('Reiniciar'),
+          ),
+        ],
+      ),
     );
   }
 }
