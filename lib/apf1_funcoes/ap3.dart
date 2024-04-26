@@ -30,9 +30,19 @@ class GanhouWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Colors.green,
-      child: const Text('Você ganhou'),
-    );
+        color: Colors.green,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Text('Você ganhou'),
+            ElevatedButton(
+              onPressed: () {
+                print('O jogo ira reiniciar');
+              },
+              child: const Text('Reiniciar'),
+            ),
+          ],
+        ));
   }
 }
 
