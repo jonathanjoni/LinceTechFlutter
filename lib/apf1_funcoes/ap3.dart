@@ -25,11 +25,25 @@ class MyApp extends StatelessWidget {
 }
 
 class GanhouWidget extends StatelessWidget {
+  const GanhouWidget({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Container(
       color: Colors.green,
       child: const Text('Você ganhou'),
+    );
+  }
+}
+
+class PerdeuWidget extends StatelessWidget {
+  const PerdeuWidget({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      color: Colors.red,
+      child: const Text('Você perdeu'),
     );
   }
 }
@@ -80,14 +94,11 @@ class _MyWidgetState extends State<MyWidget> {
     // Se o usuário ganhou, retorna a mensagem de sucesso com o fundo em verde
     switch (situacao) {
       case SituacaoDoJogo.ganhou:
-        return GanhouWidget();
+        return const GanhouWidget();
 
       // Se o usuário perdeu, retorna a mensagem de fracasso com o fundo em vermelho
       case SituacaoDoJogo.perdeu:
-        return Container(
-          color: Colors.red,
-          child: const Text('Você perdeu'),
-        );
+        return const PerdeuWidget();
 
       // Nesse momento o jogo ainda nao foi finalizado
       case SituacaoDoJogo.jogando:
