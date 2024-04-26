@@ -25,7 +25,7 @@ class MyApp extends StatelessWidget {
 }
 
 class GanhouWidget extends StatelessWidget {
-  const GanhouWidget({super.key});
+  const GanhouWidget({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -37,13 +37,44 @@ class GanhouWidget extends StatelessWidget {
 }
 
 class PerdeuWidget extends StatelessWidget {
-  const PerdeuWidget({super.key});
+  const PerdeuWidget({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Container(
       color: Colors.red,
       child: const Text('Você perdeu'),
+    );
+  }
+}
+
+class JogandoWidget extends StatelessWidget {
+  final Function(int) botaoPressionado;
+  JogandoWidget({Key? key, required this.botaoPressionado}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        ElevatedButton(
+          child: const Text('A'),
+          onPressed: () {
+            botaoPressionado(0);
+          },
+        ),
+        ElevatedButton(
+          child: const Text('B'),
+          onPressed: () {
+            botaoPressionado(1);
+          },
+        ),
+        ElevatedButton(
+          child: const Text('C'),
+          onPressed: () {
+            botaoPressionado(2);
+          },
+        ),
+      ],
     );
   }
 }
@@ -102,28 +133,7 @@ class _MyWidgetState extends State<MyWidget> {
 
       // Nesse momento o jogo ainda nao foi finalizado
       case SituacaoDoJogo.jogando:
-        return Column(
-          children: [
-            ElevatedButton(
-              child: const Text('A'),
-              onPressed: () {
-                tentativa(0);
-              },
-            ),
-            ElevatedButton(
-              child: const Text('B'),
-              onPressed: () {
-                tentativa(1);
-              },
-            ),
-            ElevatedButton(
-              child: const Text('C'),
-              onPressed: () {
-                tentativa(2);
-              },
-            ),
-          ],
-        );
+        return JogandoWidget(botaoPressionado: tentativa);
     }
   }
 }
