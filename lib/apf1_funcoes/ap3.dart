@@ -40,7 +40,7 @@ class GanhouWidget extends StatelessWidget {
             const Text('Você ganhou'),
             ElevatedButton(
               onPressed: () {
-                botaoReiniciarJogo;
+                botaoReiniciarJogo();
               },
               child: const Text('Reiniciar'),
             ),
@@ -65,7 +65,7 @@ class PerdeuWidget extends StatelessWidget {
           const Text('Você perdeu'),
           ElevatedButton(
             onPressed: () {
-              botaoReiniciaJogo;
+              botaoReiniciaJogo();
               print('O jogo ira reiniciar');
             },
             child: const Text('Reiniciar'),
@@ -108,6 +108,27 @@ class JogandoWidget extends StatelessWidget {
   }
 }
 
+class VitoriasEDerrotasWidget extends StatelessWidget {
+  final vitorias;
+  final derrotas;
+  const VitoriasEDerrotasWidget(
+      {Key? key, required this.vitorias, required this.derrotas})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text('Vitórias = $vitorias'),
+          Text('Derrotas = $derrotas'),
+        ],
+      ),
+    );
+  }
+}
+
 enum SituacaoDoJogo { ganhou, perdeu, jogando }
 
 class MyWidget extends StatefulWidget {
@@ -121,6 +142,8 @@ class _MyWidgetState extends State<MyWidget> {
   var botaoCorreto = 0;
   var clicks = 0;
   var situacao = SituacaoDoJogo.jogando;
+  var vitorias = 0;
+  var derrotas = 0;
 
   // Esse método e chamado somente uma vez, ao iniciar o state
   @override
@@ -137,6 +160,7 @@ class _MyWidgetState extends State<MyWidget> {
       // Verificar se a opção escolhida esta correta
       if (opcao == botaoCorreto) {
         situacao = SituacaoDoJogo.ganhou;
+        vitorias++;
       } else {
         // Se estiver errada, incrementa o contador de clicks
         clicks++;
@@ -145,31 +169,42 @@ class _MyWidgetState extends State<MyWidget> {
       // Se a quantidade de clicks for maior ou igual a 2, o usuário perdeu
       if (clicks >= 2 && situacao != SituacaoDoJogo.ganhou) {
         situacao = SituacaoDoJogo.perdeu;
+        derrotas++;
       }
     });
   }
 
   // Volta ao estado original as variaveis
   void reiniciaJogo() {
-    botaoCorreto = random.nextInt(3);
-    clicks = 0;
-    situacao = SituacaoDoJogo.jogando;
+    setState(() {
+      botaoCorreto = random.nextInt(3);
+      clicks = 0;
+      situacao = SituacaoDoJogo.jogando;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    // Se o usuário ganhou, retorna a mensagem de sucesso com o fundo em verde
-    switch (situacao) {
-      case SituacaoDoJogo.ganhou:
-        return GanhouWidget(botaoReiniciarJogo: reiniciaJogo);
+    return Container(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          VitoriasEDerrotasWidget(vitorias: vitorias, derrotas: derrotas),
+          // Se o usuário ganhou, retorna a mensagem de sucesso com o fundo em verde
+          switch (situacao) {
+            SituacaoDoJogo.ganhou =>
+              GanhouWidget(botaoReiniciarJogo: reiniciaJogo),
 
-      // Se o usuário perdeu, retorna a mensagem de fracasso com o fundo em vermelho
-      case SituacaoDoJogo.perdeu:
-        return PerdeuWidget(botaoReiniciaJogo: reiniciaJogo);
+            // Se o usuário perdeu, retorna a mensagem de fracasso com o fundo em vermelho
+            SituacaoDoJogo.perdeu =>
+              PerdeuWidget(botaoReiniciaJogo: reiniciaJogo),
 
-      // Nesse momento o jogo ainda nao foi finalizado
-      case SituacaoDoJogo.jogando:
-        return JogandoWidget(botaoPressionado: tentativa);
-    }
+            // Nesse momento o jogo ainda nao foi finalizado
+            SituacaoDoJogo.jogando =>
+              JogandoWidget(botaoPressionado: tentativa),
+          }
+        ],
+      ),
+    );
   }
 }
